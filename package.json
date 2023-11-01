@@ -1,0 +1,46 @@
+{
+  "name": "floating-diamonds",
+  "version": "1.0.0",
+  "description": "Mixing refraction shaders and animations.",
+  "keywords": [
+    "gltf",
+    "refraction",
+    "useframe",
+    "useaspect",
+    "drei"
+  ],
+  "main": "src/index.tsx",
+  "dependencies": {
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@react-three/drei": "9.77.4",
+    "@react-three/fiber": "8.13.4",
+    "@react-three/postprocessing": "2.14.11",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
+    "@types/react-router-dom": "^5.3.3",
+    "framer-motion": "^10.16.4",
+    "npm-check-updates": "^16.14.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "^6.17.0",
+    "react-scripts": "5.0.1",
+    "three": "0.153.0"
+  },
+  "devDependencies": {
+    "typescript": "3.3.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
