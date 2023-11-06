@@ -1,0 +1,7 @@
+export const DANKTOKEN = "DANK"
+export const DANKACCOUNT = "jasentoken"
+export const XPRACCOUNT = "eosio.token"
+export const XPRTOKEN = "XPR"
+export const STAKINGACCOUNT = "4xstake"
+export const SETTINGTABLE = "allowglobals"
+export const BALANCETABLE = "balances"

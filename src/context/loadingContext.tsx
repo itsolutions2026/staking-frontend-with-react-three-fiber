@@ -11,16 +11,19 @@ const LoadingContext = React.createContext<LoadingContextObj>({
 });
 
 
-export const LoadingProvider: React.FC = (props) => {
-    const [loading, setLoading] = useState<boolean>(props.hasOwnProperty("isLoading") ? props.isLoading : true);
+export const LoadingProvider: React.FC = (props: React.ReactNode) => {
+    const [loading, setLoading] = useState<boolean>( true);
 
     const handleLoading = () => {
-        setLoading(false);
+        setTimeout(() => {
+            setLoading(false);
+        }, 1300)
     }
 
     useEffect(()=>{
         window.addEventListener("load",handleLoading);
-        // return () => window.removeEventListener("load",handleLoading);
+        handleLoading()
+        return () => window.removeEventListener("load",handleLoading);
     },[])
 
     return (

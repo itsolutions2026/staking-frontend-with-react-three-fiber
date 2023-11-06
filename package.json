@@ -12,8 +12,11 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/toast": "^7.0.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@proton/api": "^28.5.4",
+    "@proton/web-sdk": "^4.2.15",
     "@react-three/drei": "9.77.4",
     "@react-three/fiber": "8.13.4",
     "@react-three/postprocessing": "2.14.11",
@@ -23,19 +26,22 @@
     "framer-motion": "^10.16.4",
     "npm-check-updates": "^16.14.6",
     "react": "18.2.0",
+    "react-apexcharts": "^1.4.1",
     "react-dom": "18.2.0",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
+    "recoil": "^0.7.7",
     "three": "0.153.0"
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "typescript": "3.3.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test --env=jsdom",
+    "eject": "craco eject"
   },
   "browserslist": [
     ">0.2%",

@@ -60,43 +60,45 @@ const ControllerComponent: React.FC = () => {
                     height={"40px"}
                     position={"relative"}
                     borderLeft={"1px solid black"}
-                    borderRight={"1px solid black"}
-                    sx={{
-                        "@media only screen and (max-width: 600px)": {
-                            width: "100px",
-                        },
-                    }}
-                >
-                    Staking
-                </Button>
-            </Link>
-            <Link to={PATH.CLAIMING}>
-                <Button
-                    backgroundColor={
-                        location.pathname === PATH.CLAIMING
-                            ? "#126d92"
-                            : "white"
-                    }
-                    color={location.pathname === PATH.CLAIMING
-                        ? "white"
-                        : "black"}
-                    borderRadius={"none"}
-                    _hover={{ bgColor: "#126d92", color: "white"}}
-                    width={"150px"}
-                    height={"40px"}
-                    position={"relative"}
+                    // borderRight={"1px solid black"}
                     borderTopRightRadius={"10px"}
                     borderBottomRightRadius={"10px"}
-                    borderLeft={"1px solid black"}
                     sx={{
                         "@media only screen and (max-width: 600px)": {
                             width: "100px",
                         },
                     }}
                 >
-                    Claiming
+                    Stake
                 </Button>
             </Link>
+            {/*<Link to={PATH.CLAIMING}>*/}
+            {/*    <Button*/}
+            {/*        backgroundColor={*/}
+            {/*            location.pathname === PATH.CLAIMING*/}
+            {/*                ? "#126d92"*/}
+            {/*                : "white"*/}
+            {/*        }*/}
+            {/*        color={location.pathname === PATH.CLAIMING*/}
+            {/*            ? "white"*/}
+            {/*            : "black"}*/}
+            {/*        borderRadius={"none"}*/}
+            {/*        _hover={{ bgColor: "#126d92", color: "white"}}*/}
+            {/*        width={"150px"}*/}
+            {/*        height={"40px"}*/}
+            {/*        position={"relative"}*/}
+            {/*        borderTopRightRadius={"10px"}*/}
+            {/*        borderBottomRightRadius={"10px"}*/}
+            {/*        borderLeft={"1px solid black"}*/}
+            {/*        sx={{*/}
+            {/*            "@media only screen and (max-width: 600px)": {*/}
+            {/*                width: "100px",*/}
+            {/*            },*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        Claim*/}
+            {/*    </Button>*/}
+            {/*</Link>*/}
         </Flex>
     );
 };

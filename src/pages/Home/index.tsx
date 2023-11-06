@@ -1,16 +1,21 @@
 // node_modules
-import React, { useState, useContext, useCallback, useEffect } from "react";
+import React from "react";
+import {useRecoilValue} from "recoil";
 import { Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+
+import {userDankBalance, contractXPRBalance, userNewReward, contractSettingRewardRate} from "../../atoms";
+
 // components
 import { ValueItemBoxComponent } from "../../components";
-
+import { TOKEN} from "../../consts";
 
 const HomePage: React.FC = () => {
-    const [SATsBalance, setSATsBalance] = useState<string>("0");
-    const [SATsPrice] = useState<string>("0");
-    const [treasuryBalance] = useState<string>("0");
-    const [burnedTokens] = useState<string>("0");
+
+    const dankBalance = useRecoilValue(userDankBalance);
+    const xprBalance = useRecoilValue(contractXPRBalance);
+    const reward = useRecoilValue(userNewReward);
+    const rewardRate = useRecoilValue(contractSettingRewardRate)
 
     return (
         <motion.div className={"home"} initial={{ opacity: 0}} animate={{opacity : 1}} exit={{opacity: 0}}>
@@ -25,13 +30,15 @@ const HomePage: React.FC = () => {
                 }}
             >
                 <ValueItemBoxComponent
-                    label={"Your Balance"}
-                    text={`${SATsBalance} Danks`}
+                    label={"Wallet Dank Balance"}
+                    text={`${dankBalance} ${TOKEN.DANKTOKEN}`}
                 />
+
                 <ValueItemBoxComponent
-                    label={"Dank Price"}
-                    text={`${SATsPrice}$`}
+                    label={"Available Rewards"}
+                    text={`${reward} XPR`}
                 />
+
             </Flex>
             <Flex
                 display={"flex"}
@@ -44,12 +51,13 @@ const HomePage: React.FC = () => {
                 }}
             >
                 <ValueItemBoxComponent
-                    label={"Treasury Balance"}
-                    text={`${treasuryBalance} $`}
+                    label={"Contract XPR Amount"}
+                    text={`${xprBalance} XPR`}
                 />
+
                 <ValueItemBoxComponent
-                    label={"Burned Tokens"}
-                    text={`${burnedTokens} Danks`}
+                    label={"Reward Rate"}
+                    text={`${Math.round(parseFloat(rewardRate) * 100000000) / 100000000}`}
                 />
             </Flex>
         </motion.div>

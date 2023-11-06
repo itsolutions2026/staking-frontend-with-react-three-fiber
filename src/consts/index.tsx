@@ -1,3 +1,3 @@
 import * as PATH from "./path";
-
-export { PATH };
+import * as TOKEN from "./token"
+export { PATH, TOKEN };
