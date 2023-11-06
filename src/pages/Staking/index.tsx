@@ -42,30 +42,38 @@ const StakingPage: React.FC = () => {
         <motion.div className={"balanceKeep"} initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
             <Stack
                 backgroundImage={"linear-gradient(90deg, rgb(17 80 106 / 61%) 0%, rgb(28 83 130 / 78%) 35%, rgb(65 115 133 / 61%) 100%)"}
+                flexDirection={"row"}
                 alignItems={"center"}
                 marginTop={"20px"}
-                width={"500px"}
                 boxShadow={"0 0 3px 1px white"}
                 borderRadius={"10px"}
+                maxWidth={"900px"}
                 sx={{
-                    "@media only screen and (max-width: 600px)": {
+                    "@media only screen and (max-width: 900px)": {
                         width: "100%",
                         marginLeft: "auto",
                         marginRight: "auto",
+                        flexDirection: "column"
                     },
                 }}
                 padding={"30px"}
             >
                 <PieCard/>
-                <Box
-                    padding={"10px 15px 10px 15px"}
-                    borderRadius={"10px"}
-                    width={"100%"}
-                    m={1}
-                    component="fieldset"
-                    boxShadow={"0px 5px 10px 1px #203949"}
-                    backgroundImage={"linear-gradient(90deg, rgb(17 80 106 / 61%) 0%, rgb(28 83 130 / 78%) 35%, rgb(65 115 133 / 61%) 100%)"}
-                >
+                <Stack padding={"0px"} margin={"0px"} width={"600px"}
+                       sx={{
+                           "@media only screen and (max-width: 600px)": {
+                               width: "100%",
+                           },
+                       }}>
+                    <Box
+                        padding={"10px 15px 10px 15px"}
+                        borderRadius={"10px"}
+                        width={"100%"}
+                        m={1}
+                        component="fieldset"
+                        boxShadow={"0px 5px 10px 1px #203949"}
+                        backgroundImage={"linear-gradient(90deg, rgb(17 80 106 / 61%) 0%, rgb(28 83 130 / 78%) 35%, rgb(65 115 133 / 61%) 100%)"}
+                    >
                         <legend style={{color: "white", marginLeft: "5px", fontWeight: "400"}}>Stake amount</legend>
                         <InputGroup color={"black"} mt={"5px"} >
                             <Input
@@ -97,15 +105,15 @@ const StakingPage: React.FC = () => {
                             </Button>
                         </Flex>
                     </Box>
-                <Box padding={"10px 15px 10px 15px"}
-                     borderRadius={"10px"}
-                     width={"100%"}
-                     m={1}
-                     component="fieldset"
-                     boxShadow={"0px 5px 10px 1px #203949"}
-                     backgroundImage={"linear-gradient(90deg, rgb(17 80 106 / 61%) 0%, rgb(28 83 130 / 78%) 35%, rgb(65 115 133 / 61%) 100%)"}
-                >
-                    <legend style={{color: "white", marginLeft: "5px", fontWeight: "400"}}>Unstake amount</legend>
+                    <Box padding={"10px 15px 10px 15px"}
+                         borderRadius={"10px"}
+                         width={"100%"}
+                         m={1}
+                         component="fieldset"
+                         boxShadow={"0px 5px 10px 1px #203949"}
+                         backgroundImage={"linear-gradient(90deg, rgb(17 80 106 / 61%) 0%, rgb(28 83 130 / 78%) 35%, rgb(65 115 133 / 61%) 100%)"}
+                    >
+                        <legend style={{color: "white", marginLeft: "5px", fontWeight: "400"}}>Unstake amount</legend>
                         <InputGroup color={"black"} mt={"5px"} >
                             <Input
                                 ref={unstakeAmountRef}
@@ -136,6 +144,7 @@ const StakingPage: React.FC = () => {
                             </Button>
                         </Flex>
                     </Box>
+                </Stack>
             </Stack>
         </motion.div>
     );
