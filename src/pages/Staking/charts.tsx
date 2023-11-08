@@ -1,5 +1,5 @@
 export const pieChartOptions: any = {
-    labels: [ 'Your files', 'System', ],
+    labels: [ 'You', 'Staking Contract', ],
     colors: [ '#4318FF', '#6AD2FF', ],
     chart: {
         width: '80px'

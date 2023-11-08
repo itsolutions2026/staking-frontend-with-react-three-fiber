@@ -9,6 +9,7 @@ import {PATH} from "./consts";
 
 import {ClaimingPage, HomePage, StakingPage} from "./pages";
 
+
 const App: React.FC = () => {
   return (
       <RecoilRoot>
@@ -18,8 +19,9 @@ const App: React.FC = () => {
                       <AnimatePresence>
                           <Routes>
                               <Route path={PATH.HOME} exact element={<HomePage/>}/>
-                              <Route path={PATH.CLAIMING} exact element={<ClaimingPage/>}/>
-                              <Route path={"*"} exact element={<Navigate to={PATH.HOME}/>} />
+                              <Route path={PATH.STAKING}  element={<StakingPage/>}/>
+                              <Route path={PATH.CLAIMING}  element={<HomePage/>} />
+                              <Route path={"*"}  element={<HomePage/>} />
                           </Routes>
                       </AnimatePresence>
                   </LayoutComponent>
