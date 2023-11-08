@@ -21,23 +21,160 @@ import {
     Stack,
 } from "@chakra-ui/react";
 import {motion} from "framer-motion";
-
+import * as SDK from "../../util/webSdk"
 import {PieCard} from "./PieCard"
+import {useRecoilState, useRecoilValue} from "recoil";
+import {userContractDankBalance, userDankBalance, userState} from "../../atoms";
+import {stakeDank} from "../../util/webSdk";
+import {TOKEN} from "../../consts";
 
 
 const StakingPage: React.FC = () => {
 
     const toast = useToast();
+    const [user, setUser] = useRecoilState(userState);
 
-    const [allowance, setAllowance] = useState<string>("0");
-    const [totalStakedAmount, setTotalStakedAmount] = useState<string>("0");
-    const [stakingPoolPercent, setStakingPoolPercent] = useState<string>("0");
-    const [totalUnstakedAmount, setTotalUnstakedAmount] = useState<string>("0");
 
     const stakeAmountRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-    const unstakeAmountRef =
-        useRef() as React.MutableRefObject<HTMLInputElement>;
+    const unstakeAmountRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
+
+    const dankBalance = useRecoilValue(userDankBalance);
+    const userDankStakedBalance = useRecoilValue(userContractDankBalance);
+
+    const refreshData = async () => {
+        const loadDataPromise = SDK.loadData(setUser)
+
+        toast.promise(loadDataPromise, {
+            success: {
+                title: 'Success',
+                description: 'User data is refreshed successfully',
+                isClosable: true,
+                position: "bottom-left"
+            },
+            error: {
+                title: 'Error',
+                description: 'User data loading is failed',
+                isClosable: true,
+                position: "bottom-left"
+            },
+            loading: {
+                title: 'Refreshing Data',
+                description: 'Loading updated user data...',
+                position: "bottom-left"
+            }
+        })
+    }
+    const stake = async () => {
+        if (user.actor) {
+            if (stakeAmountRef.current.value) {
+                const amount = parseFloat(stakeAmountRef.current.value);
+                if (amount > 0) {
+                    const result = SDK.stakeDank(amount);
+
+                    toast.promise(result, {
+                        success: {
+                            title: 'Success',
+                            description: `Staked ${amount} ${TOKEN.DANKTOKEN} successfully!`,
+                            isClosable: true,
+                            position: "bottom-left",
+                            onCloseComplete: () => {
+                                refreshData();
+                            }
+                        },
+                        error: {
+                            title: 'Error',
+                            description: `Stake ${amount} ${amount} failed!`,
+                            isClosable: true,
+                            position: "bottom-left"
+                        },
+                        loading: {
+                            title: 'Staking Dank',
+                            description: 'Please wait while stake your DANK...',
+                            position: "bottom-left"
+                        }
+                    })
+
+                } else {
+                    toast({
+                        title: `Please insert correct amount!`,
+                        status: "error",
+                        isClosable: true,
+                        duration: 3000,
+                        position: "bottom-left"
+                    });
+                }
+            } else {
+                toast({
+                    title: `Please insert correct amount!`,
+                    status: "error",
+                    isClosable: true,
+                    duration: 3000,
+                    position: "bottom-left"
+                });
+            }
+        }else{
+            toast({
+                title: `Please connect your wallet!`,
+                status: "error",
+                isClosable: true,
+                duration: 3000,
+                position: "bottom-left"
+            });
+        }
+    }
+
+    const unstake = async () => {
+        if (user.actor) {
+            if(unstakeAmountRef.current.value){
+                const amount = parseFloat(unstakeAmountRef.current.value);
+                if(amount > 0){
+                    const result = SDK.unstakeDank(amount);
+
+                    toast.promise(result, {
+                        success: {
+                            title: 'Success',
+                            description: `Unstaked ${amount} ${TOKEN.DANKTOKEN} successfully!`,
+                            isClosable: true,
+                            position: "bottom-left",
+                            onCloseComplete: () => {
+                                refreshData();
+                            }
+                        },
+                        error: {
+                            title: 'Error',
+                            description: `Unstake ${amount} ${amount} failed!`,
+                            isClosable: true,
+                            position: "bottom-left"
+                        },
+                        loading: {
+                            title: 'Unstaking Dank',
+                            description: 'Please wait while unstake your DANK...',
+                            position: "bottom-left"
+                        }
+                    })
+                }
+                else{
+                    toast({
+                        title: `Please insert correct amount!`,
+                        status: "error",
+                        isClosable: true,
+                        duration: 3000,
+                        position: "bottom-left"
+                    });
+                }
+            }
+        }
+        else{
+            toast({
+                title: `Please connect your wallet!`,
+                status: "error",
+                isClosable: true,
+                position: "bottom-left",
+                duration: 3000,
+            });
+        }
+    }
     return (
         <motion.div className={"balanceKeep"} initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
             <Stack
@@ -83,7 +220,7 @@ const StakingPage: React.FC = () => {
                             />
                             <InputRightAddon
                                 onClick={() => {
-                                    stakeAmountRef.current.value = totalStakedAmount;
+                                    stakeAmountRef.current.value = dankBalance;
                                 }}
                                 background={"#007a9d"}
                                 border={"none"}
@@ -100,7 +237,9 @@ const StakingPage: React.FC = () => {
                                     boxShadow={"0 0 3px 1px white"}
                                     color={"white"}
                                     borderRadius={"10px"}
-                                    _hover={{bgColor: "#007a9d", color: "white"}}>
+                                    _hover={{bgColor: "#007a9d", color: "white"}}
+                                    onClick={stake}
+                            >
                                 Stake
                             </Button>
                         </Flex>
@@ -122,7 +261,7 @@ const StakingPage: React.FC = () => {
                             />
                             <InputRightAddon
                                 onClick={() => {
-                                    stakeAmountRef.current.value = totalStakedAmount;
+                                    unstakeAmountRef.current.value = userDankStakedBalance;
                                 }}
                                 background={"#007a9d"}
                                 border={"none"}
@@ -139,7 +278,9 @@ const StakingPage: React.FC = () => {
                                     boxShadow={"0 0 3px 1px white"}
                                     color={"white"}
                                     borderRadius={"10px "}
-                                    _hover={{bgColor: "#007a9d", color: "white"}}>
+                                    _hover={{bgColor: "#007a9d", color: "white"}}
+                                    onClick={unstake}
+                            >
                                 Unstake
                             </Button>
                         </Flex>

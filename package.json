@@ -1,4 +1,5 @@
 {
+  "homepage": "https://lee-1980.github.io/staking-frontend-with-react-three-fiber",
   "name": "floating-diamonds",
   "version": "1.0.0",
   "description": "Mixing refraction shaders and animations.",
@@ -35,13 +36,16 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "gh-pages": "^6.0.0",
     "typescript": "3.3.3"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test --env=jsdom",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": [
     ">0.2%",

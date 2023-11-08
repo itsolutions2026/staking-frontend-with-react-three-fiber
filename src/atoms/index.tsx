@@ -1,6 +1,7 @@
 import { RpcInterfaces } from "@proton/js";
 import { atom, selector } from "recoil";
 import {TOKEN} from "../consts";
+import {XPRACCOUNT} from "../consts/token";
 
 
 export const userState = atom({
@@ -66,6 +67,34 @@ export const contractXPRBalance = selector({
     },
 })
 
+export const userContractDankBalance = selector({
+    key: 'userContractDankBalance',
+    get: ({get}) => {
+        const user = get(userState);
+
+        if (user.metadata && user.metadata.userStakedToken) {
+
+            // @ts-ignore
+            console.log(user.metadata.userStakedToken)
+            return user.metadata.userStakedToken
+        }
+        return 0
+    }
+})
+export const contractDankBalance = selector({
+    key: 'contractDankBalance',
+    get: ({get}) => {
+        const user = get(userState);
+
+        if (user.metadata && user.metadata.stakedDANK) {
+
+            // @ts-ignore
+            return user.metadata.stakedDANK
+        }
+        return 0
+    }
+})
+
 
 export const userNewReward = selector({
     key: 'userNewReward',
@@ -93,3 +122,21 @@ export const contractSettingRewardRate = selector({
     }
 })
 
+
+export const contractSettingRewardedAmount = selector({
+    key: 'contractSettingRewardedAmount',
+    get: ({get}) => {
+        const user = get(userState);
+
+        if (user.metadata && user.metadata.contractSetting && user.metadata.contractSetting?.totalRewards ) {
+            // @ts-ignore
+            for (let i = 0; i < user.metadata.contractSetting.totalRewards.length; i++) {
+                if(user.metadata.contractSetting.totalRewards[i].contract === TOKEN.XPRACCOUNT) {
+                    return user.metadata.contractSetting.totalRewards[i].quantity
+                }
+            }
+
+        }
+        return `0 ${TOKEN.XPRTOKEN}`
+    }
+})

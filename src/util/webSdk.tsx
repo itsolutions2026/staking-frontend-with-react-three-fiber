@@ -1,7 +1,7 @@
 import ProtonWebSDK, {ProtonWebLink, LinkSession, TransactResult, Link} from '@proton/web-sdk';
-import {Serialize, JsonRpc, RpcInterfaces} from '@proton/js';
+import { Serialize, JsonRpc, RpcInterfaces} from '@proton/js';
 import { ApiClass } from '@proton/api'
-import { TOKEN} from "../consts";
+import { TOKEN } from "../consts";
 
 export let link: ProtonWebLink | Link | undefined;
 export let session: LinkSession | undefined;
@@ -114,16 +114,17 @@ export const reconnect = async (): Promise<LinkSession> => {
     }
 };
 
-export const transfer = async ({to, amount}: { to: string, amount: string }) => {
+export const transfer = async ({to, amount, memo}: { to: string, amount: string, memo: string }) => {
     if (!session) {
         throw new Error('TRANSFER: The Wallet session is not defined!');
     }
+    console.log(`${(+amount).toFixed(TOKEN.DANKTOKENPRECISION)} ${TOKEN.DANKTOKEN}`)
 
-    return await session.transact({
+    return session.transact({
         actions: [{
             // Token contract for only XPR
             // Other tokens like XUSDC have contract "xtokens"
-            account: "eosio.token",
+            account: TOKEN.DANKACCOUNT,
 
             // Action name
             name: "transfer",
@@ -133,8 +134,40 @@ export const transfer = async ({to, amount}: { to: string, amount: string }) => 
                 from: session.auth.actor,
                 to: to,
                 // Change precision from 4 for other assets, e.g. 6 for USDC
-                quantity: `${(+amount).toFixed(4)} XPR`,
-                memo: ""
+                quantity: `${(+amount).toFixed(TOKEN.DANKTOKENPRECISION)} ${TOKEN.DANKTOKEN}`,
+                memo: memo
+            },
+            authorization: [session.auth]
+        }]
+    }, {
+        broadcast: true
+    })
+}
+
+export const withdraw = async (amount: string) => {
+    if (!session) {
+        throw new Error('TRANSFER: The Wallet session is not defined!');
+    }
+
+    return session.transact({
+        actions: [{
+            // Token contract for only XPR
+            // Other tokens like XUSDC have contract "xtokens"
+            account: TOKEN.STAKINGACCOUNT,
+
+            // Action name
+            name: "withdraw",
+
+            // Action parameters
+            data: {
+                actor: session.auth.actor,
+                // Change precision from 4 for other assets, e.g. 6 for USDC
+                tokens: [
+                    {
+                        quantity: `${(+amount).toFixed(TOKEN.DANKTOKENPRECISION)} ${TOKEN.DANKTOKEN}`,
+                        contract: TOKEN.DANKACCOUNT
+                    }
+                ]
             },
             authorization: [session.auth]
         }]
@@ -147,7 +180,7 @@ export const transfer = async ({to, amount}: { to: string, amount: string }) => 
  *  Get the User's available Rewards
  */
 
-export function getAvailableReward(actor: string, rewardRate: number | undefined): Promise<number>{
+export function getAvailableReward(actor: string, rewardRate: number | undefined, totalXPR: number, totalDank: number): Promise<object>{
     return new Promise (async (resolve) => {
         try{
             if (!rewardRate) throw new Error("Reward Rate is not defined!")
@@ -161,7 +194,7 @@ export function getAvailableReward(actor: string, rewardRate: number | undefined
                 index_position: 1,
                 limit: 1
             })
-
+            let userStakedToken = 0
             if(result.rows.length > 0){
                 let tokenAmount = 0, rewardAmount = 0, newRewardAmount = 0;
 
@@ -169,6 +202,7 @@ export function getAvailableReward(actor: string, rewardRate: number | undefined
                 const userRewards = result.rows[0]?.rewards || []
                 const userTokens = result.rows[0]?.tokens || []
                 const lastUpdated = result.rows[0]?.LastUpdated
+
 
                 if(userRewards.length){
                     userRewards.forEach((reward: Assert)=>{
@@ -183,20 +217,20 @@ export function getAvailableReward(actor: string, rewardRate: number | undefined
                     userTokens.forEach((token: Assert)=>{
                         const tokenSymbol = token.quantity.split(' ')[1]
                         if(token.contract == TOKEN.DANKACCOUNT && tokenSymbol == TOKEN.DANKTOKEN){
-                            tokenAmount = parseFloat(token.quantity.split(' ')[0])
-                            newRewardAmount = parseFloat((tokenAmount * (currentTimeInSec - lastUpdated) / 86400).toFixed(4))
+                            userStakedToken = parseFloat(token.quantity.split(' ')[0])
+                            newRewardAmount = parseFloat((totalXPR * rewardRate * (currentTimeInSec - lastUpdated) * userStakedToken / 86400 /totalDank).toFixed(4))
                         }
                     })
                 }
 
-                resolve(rewardAmount + newRewardAmount)
+                resolve({ availableAmount : (rewardAmount + newRewardAmount), userStakedToken:userStakedToken})
 
             }
-            resolve(0)
+            resolve({ availableAmount : 0, userStakedToken: userStakedToken})
         }
         catch (e) {
             console.error("Get Available Reward Error: " , e)
-            resolve(0)
+            resolve({ availableAmount : 0, userstakedToken: 0})
         }
     })
 }
@@ -280,6 +314,7 @@ export const contractXPRDANKAmount = ():Promise<contractBalance> => {
                 const result = await protonApi.getAccountTokens(TOKEN.STAKINGACCOUNT)
                 let xprAmount = 0 , dankAmount = 0;
 
+
                 result.forEach((token)=>{
                     if(token.currency == TOKEN.XPRTOKEN){
                         xprAmount = token.amount
@@ -315,12 +350,13 @@ export const loadData = (callback: Function): Promise<void> => {
             const tokeBalance = await tokenBalance();
             const {stakedXPR, stakedDANK} = await contractXPRDANKAmount();
             const contractSetting = await getContractSetting();
-            const availableRewards = await getAvailableReward(session.auth.actor.toString(), contractSetting?.percentage);
+            const {availableRewards, userStakedToken } = await getAvailableReward(session.auth.actor.toString(), contractSetting?.percentage, stakedXPR, stakedDANK);
 
             const metadata = {
                 tokeBalance: tokeBalance,
                 stakedXPR: stakedXPR,
-                stakedDank: stakedDANK,
+                stakedDANK: stakedDANK,
+                userStakedToken: userStakedToken,
                 newReward: availableRewards,
                 contractSetting: contractSetting
             }
@@ -333,6 +369,35 @@ export const loadData = (callback: Function): Promise<void> => {
             })
 
             resolve()
+        }
+        catch (e) {
+            reject(e.message)
+        }
+    })
+}
+
+export const stakeDank = (amount: number): Promise<void> => {
+    return new Promise (async (resolve, reject)=>{
+
+        try {
+            if (session && session.auth){
+                resolve(await transfer({ to: TOKEN.STAKINGACCOUNT, amount: amount.toString(), memo: 'stake' }))
+            }
+            throw new Error('User session is not defined')
+        }
+        catch (e) {
+            reject(e.message)
+        }
+    })
+}
+
+export const unstakeDank = (amount: number): Promise<void> => {
+    return new Promise (async (resolve, reject)=>{
+        try {
+            if (session && session.auth){
+                resolve(await withdraw(amount.toString()))
+            }
+            throw new Error('User session is not defined')
         }
         catch (e) {
             reject(e.message)

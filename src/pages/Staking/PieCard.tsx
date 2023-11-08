@@ -2,12 +2,20 @@
 import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 // Custom components
 import PieChart from './PieChart';
-import { pieChartData, pieChartOptions } from './charts';
+import { pieChartOptions } from './charts';
 import { VSeparator } from './Separator';
 import React from "react";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {userContractDankBalance, contractDankBalance, userState} from "../../atoms";
+
 export const PieCard: React.FC = () => {
 
     // Chakra Color Mode
+
+    const [user] = useRecoilState(userState);
+
+    const userDankStakedBalance = useRecoilValue(userContractDankBalance);
+    const contractDankStakedBalance = useRecoilValue(contractDankBalance);
 
     return (
         <Box alignItems='center' flexDirection='column' w='100%'
@@ -23,8 +31,22 @@ export const PieCard: React.FC = () => {
                     Staked Dank Chart
                 </Text>
             </Flex>
-
-            <PieChart h='100%' w='100%' chartData={pieChartData} chartOptions={pieChartOptions} />
+            { contractDankStakedBalance ?
+                <PieChart h='100%' w='100%' chartData={[
+                    (contractDankStakedBalance ? userDankStakedBalance / contractDankStakedBalance * 100 : 0),
+                    (contractDankStakedBalance ? (contractDankStakedBalance - userDankStakedBalance) / contractDankStakedBalance * 100 : 0)
+                ]} chartOptions={pieChartOptions}/>
+                :
+                // I want to display loading icon here in case contractDankStakedBalance is not yet loaded
+                user.actor ?
+                    <Text color={"rgba(76,94,142,0.87)"} fontSize='sm' fontWeight='700' mt='4px' ml={'5px'}>
+                        Loading...
+                    </Text>
+                    :
+                    <Text color={"#ff0000"} fontSize='sm' fontWeight='700' mt='4px' ml={'5px'}>
+                        Connect your wallet to stake Dank
+                    </Text>
+            }
             <Flex
                 bg={"white"}
                 flexDirection='row'
@@ -43,7 +65,7 @@ export const PieCard: React.FC = () => {
                         </Text>
                     </Flex>
                     <Text fontSize='lg' color={"#1b2559"} fontWeight='700'>
-                        3333 (25%)
+                        {userDankStakedBalance} ({ contractDankStakedBalance? (userDankStakedBalance/contractDankStakedBalance * 100).toFixed(4) : 0 } %)
                     </Text>
                 </Flex>
                 <VSeparator mx={{ base: '60px', xl: '60px', '2xl': '60px' }} />
@@ -55,7 +77,7 @@ export const PieCard: React.FC = () => {
                         </Text>
                     </Flex>
                     <Text fontSize='lg' color={"#1b2559"} fontWeight='700'>
-                        14000
+                        {contractDankStakedBalance}
                     </Text>
                 </Flex>
             </Flex>
