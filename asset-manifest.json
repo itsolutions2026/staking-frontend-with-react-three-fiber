@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/staking-frontend-with-react-three-fiber/static/css/main.75633eff.css",
-    "main.js": "/staking-frontend-with-react-three-fiber/static/js/main.d5b8fad1.js",
+    "main.js": "/staking-frontend-with-react-three-fiber/static/js/main.723ed4b4.js",
     "static/media/background.jpg": "/staking-frontend-with-react-three-fiber/static/media/background.c8970fde5e0a2075e268.jpg",
     "static/media/logo.png": "/staking-frontend-with-react-three-fiber/static/media/logo.66d2f8fa19a0900e807c.png",
     "static/media/dflat.glb": "/staking-frontend-with-react-three-fiber/static/media/dflat.51f3144a0e9b21f8878d.glb",
     "index.html": "/staking-frontend-with-react-three-fiber/index.html",
     "main.75633eff.css.map": "/staking-frontend-with-react-three-fiber/static/css/main.75633eff.css.map",
-    "main.d5b8fad1.js.map": "/staking-frontend-with-react-three-fiber/static/js/main.d5b8fad1.js.map"
+    "main.723ed4b4.js.map": "/staking-frontend-with-react-three-fiber/static/js/main.723ed4b4.js.map"
   },
   "entrypoints": [
     "static/css/main.75633eff.css",
-    "static/js/main.d5b8fad1.js"
+    "static/js/main.723ed4b4.js"
   ]
 }
