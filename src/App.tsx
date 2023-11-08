@@ -1,5 +1,5 @@
 import React  , {Fragment} from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter , Navigate} from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import LayoutComponent from "./components/Layout";
 import { AnimatePresence } from "framer-motion";
@@ -18,8 +18,8 @@ const App: React.FC = () => {
                       <AnimatePresence>
                           <Routes>
                               <Route path={PATH.HOME} exact element={<HomePage/>}/>
-                              <Route path={PATH.STAKING} element={<StakingPage/>}/>
-                              <Route path={PATH.CLAIMING} element={<ClaimingPage/>}/>
+                              <Route path={PATH.CLAIMING} exact element={<ClaimingPage/>}/>
+                              <Route path={"*"} exact element={<Navigate to={PATH.HOME}/>} />
                           </Routes>
                       </AnimatePresence>
                   </LayoutComponent>

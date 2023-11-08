@@ -195,42 +195,40 @@ export function getAvailableReward(actor: string, rewardRate: number | undefined
                 limit: 1
             })
             let userStakedToken = 0
-            if(result.rows.length > 0){
+            if(result.rows.length > 0) {
                 let tokenAmount = 0, rewardAmount = 0, newRewardAmount = 0;
 
-                const currentTimeInSec = new Date().getTime()/1000
+                const currentTimeInSec = new Date().getTime() / 1000
                 const userRewards = result.rows[0]?.rewards || []
                 const userTokens = result.rows[0]?.tokens || []
                 const lastUpdated = result.rows[0]?.LastUpdated
 
 
-                if(userRewards.length){
-                    userRewards.forEach((reward: Assert)=>{
+                if (userRewards.length) {
+                    userRewards.forEach((reward: Assert) => {
                         const tokenSymbol = reward.quantity.split(' ')[1]
-                        if(reward.contract == TOKEN.XPRACCOUNT && tokenSymbol == TOKEN.XPRTOKEN){
+                        if (reward.contract == TOKEN.XPRACCOUNT && tokenSymbol == TOKEN.XPRTOKEN) {
                             rewardAmount = parseFloat(reward.quantity.split(' ')[0])
                         }
                     })
                 }
 
-                if(userTokens.length ){
-                    userTokens.forEach((token: Assert)=>{
+                if (userTokens.length) {
+                    userTokens.forEach((token: Assert) => {
                         const tokenSymbol = token.quantity.split(' ')[1]
-                        if(token.contract == TOKEN.DANKACCOUNT && tokenSymbol == TOKEN.DANKTOKEN){
+                        if (token.contract == TOKEN.DANKACCOUNT && tokenSymbol == TOKEN.DANKTOKEN) {
                             userStakedToken = parseFloat(token.quantity.split(' ')[0])
-                            newRewardAmount = parseFloat((totalXPR * rewardRate * (currentTimeInSec - lastUpdated) * userStakedToken / 86400 /totalDank).toFixed(4))
+                            newRewardAmount = parseFloat((totalXPR * rewardRate * (currentTimeInSec - lastUpdated) * userStakedToken / 86400 / totalDank).toFixed(4))
                         }
                     })
                 }
-
-                resolve({ availableAmount : (rewardAmount + newRewardAmount), userStakedToken:userStakedToken})
-
+                resolve({availableRewards: (rewardAmount + newRewardAmount), userStakedToken: userStakedToken})
             }
-            resolve({ availableAmount : 0, userStakedToken: userStakedToken})
+            resolve({ availableRewards : 0, userStakedToken: userStakedToken})
         }
         catch (e) {
             console.error("Get Available Reward Error: " , e)
-            resolve({ availableAmount : 0, userstakedToken: 0})
+            resolve({ availableRewards : 0, userstakedToken: 0})
         }
     })
 }
@@ -351,7 +349,7 @@ export const loadData = (callback: Function): Promise<void> => {
             const {stakedXPR, stakedDANK} = await contractXPRDANKAmount();
             const contractSetting = await getContractSetting();
             const {availableRewards, userStakedToken } = await getAvailableReward(session.auth.actor.toString(), contractSetting?.percentage, stakedXPR, stakedDANK);
-
+            console.log(availableRewards, userStakedToken)
             const metadata = {
                 tokeBalance: tokeBalance,
                 stakedXPR: stakedXPR,
