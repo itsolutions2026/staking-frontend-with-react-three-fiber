@@ -1,8 +1,7 @@
 {
-  "homepage": "https://lee-1980.github.io/staking-frontend-with-react-three-fiber",
-  "name": "floating-diamonds",
+  "name": "Staking Dank Token",
   "version": "1.0.0",
-  "description": "Mixing refraction shaders and animations.",
+  "description": "Staking Tokens.",
   "keywords": [
     "gltf",
     "refraction",

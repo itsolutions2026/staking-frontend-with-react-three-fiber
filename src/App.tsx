@@ -20,8 +20,7 @@ const App: React.FC = () => {
                           <Routes>
                               <Route path={PATH.HOME} exact element={<HomePage/>}/>
                               <Route path={PATH.STAKING}  element={<StakingPage/>}/>
-                              <Route path={PATH.CLAIMING}  element={<HomePage/>} />
-                              <Route path={"*"}  element={<HomePage/>} />
+                              <Route path={"*"}  element={<HomePage/>}/>
                           </Routes>
                       </AnimatePresence>
                   </LayoutComponent>
